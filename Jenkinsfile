@@ -24,6 +24,14 @@ pipeline {
                  echo 'Empty'
             }
         }
+        stage('configure docker') {
+            steps {
+                 sh '''#!/bin/bash
+                         mv $HOME/.docker/config.json $HOME/.docker/config.json.backup
+                         kubectl version
+                 '''
+            }
+        }
         stage('Deploy') {
             steps {
                 script{
