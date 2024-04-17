@@ -24,12 +24,16 @@ pipeline {
                  echo 'Empty'
             }
         }
-        stage('configure docker') {
-            steps {
-                 sh '''#!/bin/bash
-                         mv $HOME/.docker/config.json $HOME/.docker/config.json.backup
-                 '''
+        try{
+            stage('configure docker') {
+                steps {
+                     sh '''#!/bin/bash
+                             mv $HOME/.docker/config.json $HOME/.docker/config.json.backup
+                     '''
+                }
             }
+        } catch(e) {
+            echo e.toString()  
         }
         stage('Deploy') {
             steps {
