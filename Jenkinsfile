@@ -28,7 +28,6 @@ pipeline {
             steps {
                  sh '''#!/bin/bash
                          mv $HOME/.docker/config.json $HOME/.docker/config.json.backup
-                         kubectl version
                  '''
             }
         }
