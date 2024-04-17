@@ -28,6 +28,8 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh '''#!/bin/bash
+                            aws eks update-kubeconfig --region us-east-1 --name EKSClusterE11008B6-ef81e24701dc4f909b213b97c275033c
+                            kubectl get pods
                             mv $HOME/.docker/config.json $HOME/.docker/config.json.backup
                     '''
                 }
