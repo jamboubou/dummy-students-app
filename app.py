@@ -9,7 +9,7 @@ app = Flask(__name__)
 with open('config', 'r') as f:
 	db_config = f.read().splitlines()
 	host = db_config[0]
-	port = db_config[1]
+	port = int(db_config[1])
 	username = db_config[2]
 	password = db_config[3]
 	authSource = db_config[4]
