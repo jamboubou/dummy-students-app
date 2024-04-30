@@ -36,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Push') {
             steps {
                 script{
                         docker.withRegistry('https://765449138108.dkr.ecr.us-east-1.amazonaws.com/students', 'ecr:us-east-1:Admin') {
@@ -44,6 +44,15 @@ pipeline {
                     app.push("latest")
                     }
                 }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''#!/bin/bash
+                        kubectl apply -f kubernetes/studentsapp_deployment.yaml
+                        kubectl apply -f kubernetes/studentsapp_service.yaml
+                        kubectl apply -f kubernetes/studentsapp_ingress.yaml
+                '''
             }
         }
     }

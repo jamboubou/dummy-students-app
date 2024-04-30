@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: students-app-deployment
+spec:
+  replicas: 1  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: students-app
+  template:
+    metadata:
+      labels:
+        app: students-app
+    spec:
+      containers:
+        - name: students-app
+          image: 765449138108.dkr.ecr.us-east-1.amazonaws.com/students:latest 
+          ports:
+            - containerPort: 5000
