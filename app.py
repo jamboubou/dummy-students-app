@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for 
 from pymongo import MongoClient 
+import urllib.request
+import urllib.error
 from kubernetes import client, config
 import requests
 
@@ -21,6 +23,22 @@ client = MongoClient(host=host, port=port,
 					username=username, password=password, authSource=authSource) 
 db = client.studentsdb 
 students_collection = db.students 
+
+def safeURLOpener(inputLink):
+    block_schemes = ["file", "gopher", "expect", "php", "dict", "ftp", "glob", "data"]
+    block_host = ["instagram.com", "youtube.com", "tiktok.com"]
+    input_scheme = urllib.parse.urlparse(inputLink).scheme
+    input_hostname = urllib.parse.urlparse(inputLink).hostname
+    if input_scheme in block_schemes:
+        return "Input scheme is forbidden"
+    if input_hostname in block_host:
+        return "Input hostname is forbidden"
+    try:
+        target = urllib.request.urlopen(inputLink)
+        content = target.read().decode('utf-8')
+        return content
+    except urllib.error.URLError as e:
+        return "Error opening URL: " + str(e)
 
 # Home route to display all students
 @app.route('/') 
@@ -65,11 +83,19 @@ def fetch_url():
     if not url:
         return 'Please provide a URL'
 
-    try:
-        response = requests.get(url)
-        return response.text
-    except:
-        return 'Unable to fetch URL'
+    content = safeURLOpener(url)
+    return content
 	
+#    try:
+#        target = urllib.request.urlopen(url)
+#        content = target.read().decode('utf-8')
+#        return content
+#    except urllib.error.URLError as e:
+#        print('Error opening URL: ' + str(e))
+#        return 'Unable to fetch URL'
+    
+
+
+
 if __name__ == '__main__': 
 	app.run(host='0.0.0.0', debug=True) 
